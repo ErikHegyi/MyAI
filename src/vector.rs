@@ -1,6 +1,5 @@
 use std::fmt::{Display, Formatter};
 use std::ops::{Add, Index, Mul, Sub};
-use std::io::{ErrorKind, Result, Error};
 use crate::scalar;
 use crate::scalar::Scalar;
 
@@ -12,25 +11,50 @@ pub struct Vector {
 
 
 impl Vector {
+    /// Return the values of the vector.
     pub fn values(&self) -> &Vec<Scalar> {
         &self.values
     }
     
+    /// Add a scalar to the vector.
+    /// ## Parameters
+    /// `value: Scalar` - The scalar to be added.
     pub fn push(&mut self, value: Scalar) {
         self.values.push(value)
     } 
     
+    /// Remove a scalar from the vector, returning the scalar.
+    /// ## Parameters
+    /// `index: usize` - The index of the element to be removed.
+    /// ## Returns
+    /// `Scalar` - The removed element.
     pub fn pop(&mut self, index: usize) -> Scalar {
         self.values.remove(index)
     }
     
-    pub fn find(&self, value: Scalar) -> Option<Scalar> {
-        self.values.iter().find(|x| **x == value).and_then(|x| Some(*x))
+    /// Find a value inside the vector.
+    /// ## Parameters
+    /// `value: Scalar` - The value to be found.
+    /// ## Returns
+    /// `Option<usize>` - The index of the element, if it was found.
+    pub fn find(&self, value: Scalar) -> Option<usize> {
+        self.values
+            .iter()
+            .enumerate()
+            .find(|(_, item)| **item == value)
+            .and_then(|(index, _)| Some(index))
     }
     
+    /// Get the length of the vector
+    /// ## Returns
+    /// `usize` - The length of the vector.
     pub fn len(&self) -> usize {
         self.values.len()
     }
+    
+    /// Add each element of the vector together.
+    /// ## Returns
+    /// `Scalar` - The sum of each element of the vector. 
     pub fn sum(&self) -> Scalar {
         let mut s: Scalar = scalar!(0);
         for value in self.values() {
@@ -52,7 +76,7 @@ impl From<&[Scalar]> for Vector {
 }
 
 
-impl<P: std::fmt::Debug> From<Vec<P>> for Vector where Scalar: From<P> {
+impl<P> From<Vec<P>> for Vector where Scalar: From<P> {
     fn from(value: Vec<P>) -> Self {
         let mut values: Vec<Scalar> = Vec::new();
         for v in value {
@@ -101,7 +125,7 @@ impl Add<Scalar> for Vector {
 }
 
 
-impl Sub for Vector {
+impl Sub<Vector> for Vector {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
         // Test if the lengths are equal
@@ -113,6 +137,14 @@ impl Sub for Vector {
             new.values.push(self.values[i] - rhs.values[i]);
         }
         new
+    }
+}
+
+
+impl Sub<Scalar> for Vector {
+    type Output = Self;
+    fn sub(self, rhs: Scalar) -> Self::Output {
+        todo!()
     }
 }
 
@@ -171,7 +203,7 @@ impl Display for Vector {
 
 
 #[macro_export]
-/// Create a new vector from the given elements
+/// Create a new vector from the given elements.
 macro_rules! vector {
     () => { Vector::default() };
     ($($x: literal),*) => {

@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, Index, Mul};
+use std::ops::{Add, Index, Mul, Sub};
 use crate::scalar::Scalar;
 use crate::{vector};
 use crate::vector::Vector;
@@ -12,18 +12,36 @@ pub struct Matrix {
 
 
 impl Matrix {
+    /// Get each row of the matrix
     pub fn rows(&self) -> &Vec<Vector> {
         &self.values
     }
+    
+    /// Add a row to the matrix
+    /// ## Parameters
+    /// `row: Vector` - The row to be added.
     pub fn add_row(&mut self, row: Vector) {
         self.values.push(row);
     }
+    
+    /// Remove a row from the matrix, returning the removed row
+    /// ## Parameters
+    /// `index: usize` - The index of the row to be removed.
     pub fn pop_row(&mut self, index: usize) -> Vector {
         self.values.remove(index)
     }
+    
+    /// Add a scalar as the last element of a row.
+    /// ## Parameters
+    /// `row: usize` - The index of the row, where the value should be added.  
+    /// `value: Scalar` - The scalar value to be added.
     pub fn add_to_row(&mut self, row: usize, value: Scalar) {
         self.values[row].push(value)
     }
+    
+    /// Create a new empty matrix with the given amount of rows.
+    /// ## Parameters
+    /// `rows: usize` - The amount of rows the matrix should have.
     pub fn with_rows(rows: usize) -> Self {
         let mut r: Vec<Vector> = Vec::new();
         for _ in 0..rows {
@@ -31,51 +49,29 @@ impl Matrix {
         }
         Self { values: r }
     }
+    
+    /// Get the dimensions of the matrix.
+    /// ## Returns
+    /// `[usize; 2]` => `[rows, columns]`
     pub fn dimensions(&self) -> [usize; 2] {
         let a: usize = self.values.len();
         let b: usize = self.values[0].len();
         [a, b]
     }
+    
+    /// Transpose the matrix, switching its columns and rows.
+    /// ## Returns
+    /// The transposed matrix.
     pub fn transpose(&self) -> Self {
         let mut matrix: Self = Self::with_rows(self.dimensions()[1]);
+        
         for row in self.rows() {
             for (j, value) in row.values().iter().enumerate() {
                 matrix.values[j].push(value.clone())
             }
         }
+        
         matrix
-    }
-    pub fn dot(&self, rhs: Self) -> Self {
-        // Test if the matrices are compatible
-        let dimensions: [usize; 2] = self.dimensions();
-        println!("self.dimensions = {dimensions:?}\nself = [{self}]\nrhs.dimensions = {rhs_dim:?}\nrhs = [{rhs}]", rhs_dim=rhs.dimensions());
-        assert_eq!(dimensions[0], rhs.dimensions()[1]);
-        
-        // Transpose the other matrix
-        let t: Matrix = rhs.transpose();
-        
-        // Construct the new matrix
-        let mut new: Self = Self::with_rows(dimensions[0]);
-        for (i, row) in new.values.iter_mut().enumerate() {
-            row.push(
-                self.values[i].clone() * t.values[i].clone()
-            ); 
-        }
-        new
-    }
-    pub fn to_vector(&self) -> Vector {
-        let dimensions: [usize; 2] = self.dimensions();
-        
-        if dimensions[0] == 1 { self.values[0].clone() }
-        else if dimensions[1] == 1 {
-            let mut vector: Vector = Vector::default();
-            for row in self.rows() {
-                vector.push(row[0])
-            }
-            vector
-        } else {
-            panic!("The matrix is not one dimensional")
-        }
     }
 }
 
@@ -99,6 +95,7 @@ impl From<Vector> for Matrix {
 impl Add<Matrix> for Matrix {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
+        // Test if the two matrices have the same dimensions
         let dimensions: [usize; 2] = self.dimensions();
         assert_eq!(dimensions, rhs.dimensions());
         
@@ -114,6 +111,7 @@ impl Add<Matrix> for Matrix {
     }
 }
 
+
 impl Add<Scalar> for Matrix {
     type Output = Self;
     fn add(self, rhs: Scalar) -> Self::Output {
@@ -126,6 +124,22 @@ impl Add<Scalar> for Matrix {
 }
 
 
+impl Sub<Scalar> for Matrix {
+    type Output = Self;
+    fn sub(self, rhs: Scalar) -> Self::Output {
+        todo!()
+    }
+}
+
+
+impl Sub<Matrix> for Matrix {
+    type Output = Self;
+    fn sub(self, rhs: Matrix) -> Self::Output {
+        todo!()
+    }
+}
+
+
 impl Mul<Scalar> for Matrix {
     type Output = Self;
     fn mul(self, rhs: Scalar) -> Self::Output {
@@ -134,6 +148,22 @@ impl Mul<Scalar> for Matrix {
             new.add_row(row.clone() * rhs);
         }
         new
+    }
+}
+
+
+impl Mul<Vector> for Matrix {
+    type Output = Self;
+    fn mul(self, rhs: Vector) -> Self::Output {
+        todo!()
+    }
+}
+
+
+impl Mul<Matrix> for Matrix {
+    type Output = Self;
+    fn mul(self, rhs: Matrix) -> Self::Output {
+        todo!()
     }
 }
 

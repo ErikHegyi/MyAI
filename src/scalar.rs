@@ -10,18 +10,32 @@ pub struct Scalar {
 
 
 impl Scalar {
+    /// Get the value of the scalar in the form of a floating-point integer.
+    /// ## Returns
+    /// `f64` - The value of the scalar.
     pub fn value(&self) -> f64 {
         self.value
     }
     
+    /// Set the value of the scalar.
+    /// ## Parameters
+    /// `value: f64` - The new value of the scalar.
     pub fn set_value(&mut self, value: f64) {
         self.value = value;
     }
     
-    pub fn pow(&self, num: i32) -> Self {
-        Self::from(self.value.powi(num))
+    /// Raise the scalar to the given power.
+    /// ## Parameters
+    /// `n: i32` - The exponent of the power.
+    /// ## Returns
+    /// `Scalar` - The scalar raised to the power of `n`.
+    pub fn pow(&self, n: i32) -> Self {
+        Self::from(self.value.powi(n))
     }
-
+    
+    /// Get the absolute value of the scalar.
+    /// ## Returns
+    /// `Self` - The absolute value of the scalar.
     pub fn abs(&self) -> Self {
         Self::from(self.value.abs())
     }

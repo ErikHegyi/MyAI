@@ -6,60 +6,6 @@ use crate::scalar::Scalar;
 use crate::vector::Vector;
 
 
-#[macro_export]
-macro_rules! zeros {
-    ($x: ident) => {
-        {
-            let mut vector: Vector = Vector::default();
-            for _ in 0..$x {
-                vector.push(scalar!(0));
-            }
-            vector
-        }
-    };
-    ($x: expr) => {
-        {
-            let mut vector: Vector = Vector::default();
-            for _ in 0..$x {
-                vector.push(scalar!(0));
-            }
-            vector
-        }
-    };
-    ($x: literal) => {
-        {
-            let mut vector: Vector = Vector::default();
-            for _ in 0..$x {
-                vector.push(scalar!(0));
-            }
-            vector
-        }
-    };
-}
-
-
-macro_rules! summa {
-    ($x: ident) => {
-        {
-            let mut result: Scalar = scalar!(0);
-            for item in $x {
-                result += item;
-            }
-            result
-        }
-    };
-    ($x: expr) => {
-        {
-            let mut result: Scalar = scalar!(0);
-            for item in $x {
-                result += item;
-            }
-            result
-        }
-    }
-}
-
-
 #[derive(Debug)]
 pub struct SingleFeatureLinearRegression {
     learning_rate: Scalar,
@@ -74,9 +20,9 @@ impl SingleFeatureLinearRegression {
     /// Create a new linear regression model.
     /// ## Parameters
     /// `learning_rate: f64` - The learning rate of the model (how fast should it update its parameters?)  
-    /// `iterations: u32` - How many times should it run itself?
-    /// `data: Vector` - The data that the program should train itself on - the **input values**.
-    /// `values: Vector` - The data that the program should train itself on - the **output values**.
+    /// `iterations: u32` - How many times should it run itself?  
+    /// `data: Vector` - The data that the program should train itself on - the **input values**.  
+    /// `values: Vector` - The data that the program should train itself on - the **output values**.  
     /// ## Returns
     /// `Self` - An instance of a linear regression model
     pub fn new(learning_rate: Scalar, iterations: u32, data: Vector, values: Vector) -> Self {
@@ -134,17 +80,23 @@ impl SingleFeatureLinearRegression {
         }
         Ok(Self::new(learning_rate, iterations, data, values))
     }
-
+    
+    /// Train the model to find the best possible parameters.
     pub fn train(&mut self) {
-        for i in 0..self.iterations {
+        for _ in 0..self.iterations {
             self.bias -= self.learning_rate * self.bias_derivative();
             self.weight -= self.learning_rate * self.weight_derivative();
-            if i % 100 == 0 {
-                println!("Iteration {i}:\nCost: {cost}\nself: {self:?}\n", cost=self.self_cost())
-            }
         }
     }
 
+    /// Derivate the cost function with respect to the weight.
+    /// ## Formula
+    /// <sup>&part;a</sup>&frasl;<sub>&part;C</sub> = 
+    /// <sup>1</sup>&frasl;<sub>n</sub>
+    /// &#x2211;<sup>n</sup><sub>i=0</sub>
+    /// L<sub>i</sub>  
+    /// Where n is the amount of data that we have and L<sub>i</sub> is the loss 
+    /// for the current training feature.
     fn bias_derivative(&self) -> Scalar {
         let n: usize = self.values.len();
 
@@ -157,8 +109,15 @@ impl SingleFeatureLinearRegression {
         }
         scalar!(1) / scalar!(n as u32 as f64) * summa
     }
-
-    /// $\frac{d}{d_x}\sum_{i=0}^{n}x_iL_i$
+    
+    /// Derivate the cost function with respect to the weight.
+    /// ## Formula
+    /// <sup>&part;a</sup>&frasl;<sub>&part;C</sub> = 
+    /// <sup>1</sup>&frasl;<sub>n</sub>
+    /// &#x2211;<sup>n</sup><sub>i=0</sub>
+    /// x<sub>i</sub>L<sub>i</sub>  
+    /// Where n is the amount of data that we have, x<sub>i</sub> is the current training feature,
+    /// and L<sub>i</sub> is the loss for the current training feature.
     fn weight_derivative(&self) -> Scalar {
         let n: usize = self.values.len();
 
@@ -171,23 +130,54 @@ impl SingleFeatureLinearRegression {
         }
         scalar!(1) / scalar!(n as u32 as f64) * summa
     }
-    pub fn predict(&self, x: Scalar) -> Scalar { self.weight * x  + self.bias }  // gut
-    fn loss(predicted: Scalar, actual: Scalar) -> Scalar { predicted - actual }  // gut
+    
+    /// Predict an output value based on input `x`.
+    /// ## Formula
+    /// `y = ax + b`  
+    /// Where `y` is the output value, `a` is the weight of the function, `x` is the input value
+    /// and `b` is the bias.
+    pub fn predict(&self, x: Scalar) -> Scalar {
+        self.weight * x  + self.bias
+    }
+    
+    /// Calculate the loss based on the predicted and actual values.
+    /// ## Formula
+    /// L = y<sub>predicted</sub> - y<sub>actual</sub>
+    fn loss(predicted: Scalar, actual: Scalar) -> Scalar {
+        predicted - actual
+    }
+    
+    /// Calculate the cost (loss) for the current training data with the current parameters.
+    /// ## Formula
+    /// C = <sup>1</sup>&frasl;<sub>n</sub>
+    /// &#x2211;<sup>n</sup><sub>i=0</sub>L<sub>i</sub><sup>2</sup>  
+    /// Where n is the amount of training data and L<sub>i</sub> is the loss for the
+    /// current data.
     fn cost(predicted: Vector, actual: Vector) -> Scalar {
-        assert_eq!(predicted.len(), actual.len());
+        // The two vectors have to be of the same size
+        let n: usize = predicted.len();
+        assert_eq!(n, actual.len());
 
-        let length: usize = predicted.len();
         let mut sum: Scalar = scalar!(0);
-        for i in 0..length {
+        for i in 0..n {
             sum += Self::loss(predicted[i], actual[i]).pow(2);
         }
 
-        sum / Scalar::from(length as u32)
+        sum / Scalar::from(n as u32)
     }
+    
+    /// Calculate the value of the cost function with the training data and
+    /// the current predictions for each element of the training data.
     fn self_cost(&self) -> Scalar {
-        Self::cost(
-            Vector::from(self.data.clone().into_iter().map(|x| self.predict(x)).collect::<Vec<Scalar>>()),
-            self.data.clone()
-        )
+        let actual: Vector = self.data.clone();
+        let predicted: Vector = Vector::from(
+            self.data
+                .clone()
+                .into_iter()
+                .map(|x| self.predict(x))
+                .collect::<Vec<Scalar>>()
+        );
+        
+        Self::cost(predicted, actual)
     }
 }
