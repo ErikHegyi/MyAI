@@ -38,3 +38,36 @@ fn train_model(iterations: u32, learning_rate: f64) {
     }
 }
 ```
+
+## Polynomial Regression
+### Ridge
+### Lasso
+### Elastic Net
+## Logistic Regression
+### Sigmoid
+## Multinomial Logistic Regression
+### Softmax
+## Naive Bayes
+### Gaussian Naive Bayes
+### Multinomial Naive Bayes
+### Bernoulli Naive Bayes
+## Decision Tree
+## Random Forests
+## Support Vector Machines
+### Linear Kernel
+### Polynomial Kernel
+### RBF Kernel
+### Sigmoid Kernel
+## Support Vector Regression
+## K-Nearest Neighbors
+## K-Nearest Neighbors Regression
+## Ensemble Methods
+### Bagging
+### Boosting
+### Voting
+### Stacking
+## Neural Networks
+### ReLU
+## Clustering
+### K-Means
+## Principal Component Analysis
