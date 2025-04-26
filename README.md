@@ -17,7 +17,8 @@ The model constantly shifts around the weight and the bias - the **parameters** 
 The loss is the error for a singular piece of data:  
 for example, if the value predicted by the model is 505, and the actual value is 5, then the loss is 5.  
 The cost is the sum of the losses for each piece of training data that we have. It is calculated based on this formula:  
-$C = (1/n)\sum_{i=0}^{n}L_i^2=(1/n){1}{n}\sum_{i=0}^{n}\hat{Y}_i-Y_i=(1/n){1}{n}\sum_{i=0}^{n}(ax_i+b)-Y_i$, where  
+$$C = \frac{1}{n}\sum_{i=0}^{n}L_i^2=\frac{1}{n}\sum_{i=0}^{n}\hat{Y}_i-Y_i=\frac{1}{n}\sum_{i=0}^{n}(ax_i+b)-Y_i$$
+where  
 $n$ is the amount of data we have,  
 $L_i = \hat{Y}_i-Y_i$ is the loss for the current piece of data, where $\hat{Y}$ is the vector of predicted values, and $Y$ is the vector of actual values,  
 $a$ is the weight,  
