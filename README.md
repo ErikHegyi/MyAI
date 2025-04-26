@@ -14,8 +14,9 @@ $x$ is the input value of the function,\
 $b$ is the bias of the function.
 
 The model constantly shifts around the weight and the bias - the **parameters** until it minimizes the *loss* and the *cost*.  
-The loss is the error for a singular piece of data: $L = y_{predicted} - y_{actual}$\
-for example, if the value predicted by the model is 505, and the actual value is 5, then the loss is 5.  
+The loss is the error for a singular piece of data:\
+$L = y_{predicted} - y_{actual}$\
+For example, if the value predicted by the model is 505, and the actual value is 500, then the loss is 5.  
 The cost is the sum of the losses for each piece of training data that we have. It is calculated based on this formula:
 $$C = \frac{1}{n} \sum_{i=0}^n L_i^2 = \frac{1}{n} \sum_{i=0}^n (\hat{Y_i} - Y_i)^2 = \frac{1}{n} \sum_{i=0}^n (ax_i + b - Y_i)^2$$\
 where  
