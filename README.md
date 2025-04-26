@@ -26,7 +26,7 @@ $b$ is the bias,
 $x_i$ is the value that should be predicted.
 
 The program constantly updates the parameters, until it finds the optimal values.
-This is done by looking for the graphing the cost function, and looking for the lowest slope - this is called **gradient descent**.  
+This is done by graphing the cost function, and looking for the lowest slope - this is called **gradient descent**.  
 We derivate the parameters cost function with respect to parameters $a$ and $b$, and then iterate multiple times, each time updating the parameters.
 
 ```rust
