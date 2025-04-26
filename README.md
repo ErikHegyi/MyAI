@@ -19,8 +19,8 @@ for example, if the value predicted by the model is 505, and the actual value is
 The cost is the sum of the losses for each piece of training data that we have. It is calculated based on this formula:
 $$C = \frac{1}{n} \sum_{i=0}^n L_i^2$$  
 $$C = \frac{1}{n} \sum_{i=0}^n \hat{Y_i} - Y_i$$  
-$$C = \frac{1}{n} \sum_{i=0}^n ( \hat{Y}_i-Y_i)^2$$  
-$$C = \frac{1}{n} \sum_{i=0}^n (ax_i+b-Y_i)^2$$  
+$$C = \frac{1}{n} \sum_{i=0}^n ( \hat{Y_i} - Y_i)^2$$  
+$$C = \frac{1}{n} \sum_{i=0}^n (ax_i + b - Y_i)^2$$  
 $$C = \frac{1}{n} \sum_{i=0}^n L_i^2 = \frac{1}{n} \sum_{i=0}^n \hat{Y}_i - Y_i = \frac{1}{n} \sum_{i=0}^n ax_i + b - Y_i$$
 where  
 $n$ is the amount of data we have,  
