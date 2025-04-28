@@ -131,6 +131,16 @@ impl DivAssign for Scalar {
 }
 
 
+impl Neg for Scalar {
+    type Output = Self;
+    fn neg(self) -> Self::Output {
+        Self {
+            value: -self.value
+        }
+    }
+}
+
+
 impl Default for Scalar {
     fn default() -> Self {
         Self { value: f64::default() }
