@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, Index, Mul, Sub};
+use std::ops::{Add, AddAssign, Div, DivAssign, Index, Mul, MulAssign, Neg, Sub, SubAssign};
 use crate::scalar;
 use crate::scalar::Scalar;
 
@@ -113,6 +113,15 @@ impl Add<Vector> for Vector {
     }
 }
 
+impl AddAssign<Vector> for Vector {
+    fn add_assign(&mut self, rhs: Vector) {
+        for value in rhs.values {
+            self.values.push(value)
+        }
+    }
+}
+
+
 impl Add<Scalar> for Vector {
     type Output = Self;
     fn add(self, rhs: Scalar) -> Self::Output {
@@ -124,6 +133,16 @@ impl Add<Scalar> for Vector {
     }
 }
 
+impl AddAssign<Scalar> for Vector {
+    fn add_assign(&mut self, rhs: Scalar) {
+        self.values = self.values
+            .iter()
+            .map(
+                |x| *x + rhs
+            )
+            .collect::<Vec<Scalar>>()
+    }
+}
 
 impl Sub<Vector> for Vector {
     type Output = Self;
@@ -141,10 +160,24 @@ impl Sub<Vector> for Vector {
 }
 
 
+impl SubAssign<Vector> for Vector {
+    fn sub_assign(&mut self, rhs: Vector) {
+        *self += -rhs
+    }
+}
+
+
 impl Sub<Scalar> for Vector {
     type Output = Self;
     fn sub(self, rhs: Scalar) -> Self::Output {
-        todo!()
+        self + -rhs
+    }
+}
+
+
+impl SubAssign<Scalar> for Vector {
+    fn sub_assign(&mut self, rhs: Scalar) {
+        *self += -rhs
     }
 }
 
@@ -173,6 +206,55 @@ impl Mul<Scalar> for Vector {
             *value *= rhs;
         }
         new
+    }
+}
+
+
+impl MulAssign<Scalar> for Vector {
+    fn mul_assign(&mut self, rhs: Scalar) {
+        self.values = self.values
+            .iter()
+            .map(
+                |x| *x * rhs
+            )
+            .collect::<Vec<Scalar>>()
+    }
+}
+
+
+impl Div<Scalar> for Vector {
+    type Output = Self;
+    fn div(self, rhs: Scalar) -> Self::Output {
+        Self {
+            values: self.values
+                .iter()
+                .map(|x| *x / rhs)
+                .collect::<Vec<Scalar>>()
+        }
+    }
+}
+
+
+impl DivAssign<Scalar> for Vector {
+    fn div_assign(&mut self, rhs: Scalar) {
+        self.values = self.values
+            .iter()
+            .map(|x| *x / rhs)
+            .collect::<Vec<Scalar>>()
+    }
+}
+
+impl Neg for Vector {
+    type Output = Self;
+    fn neg(self) -> Self::Output {
+        Vector::from(
+            self.values
+                .iter()
+                .map(
+                    |x| -x.value()
+                )
+                .collect::<Vec<f64>>()
+        )
     }
 }
 
@@ -217,4 +299,10 @@ macro_rules! vector {
             Vector::from(vec)
         }
     };
+    ($x: ident) => {
+        Vector::from($x)
+    };
+    ($x: expr) => {
+        Vector::from($x)
+    }
 }
