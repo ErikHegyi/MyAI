@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, Index, Mul, Sub};
+use std::ops::{Add, Index, Mul, Sub, SubAssign};
 use crate::scalar::Scalar;
 use crate::{vector};
 use crate::vector::Vector;
@@ -136,6 +136,16 @@ impl Sub<Matrix> for Matrix {
     type Output = Self;
     fn sub(self, rhs: Matrix) -> Self::Output {
         todo!()
+    }
+}
+
+impl SubAssign<Matrix> for Matrix {
+    fn sub_assign(&mut self, rhs: Matrix) {
+        for (i, row) in self.values.iter_mut().enumerate() {
+            for (j, s) in row.values.iter_mut().enumerate() {
+                *s += rhs[i][j];
+            }
+        }
     }
 }
 
