@@ -55,7 +55,7 @@ impl Matrix {
     /// `[usize; 2]` => `[rows, columns]`
     pub fn dimensions(&self) -> [usize; 2] {
         let a: usize = self.values.len();
-        let b: usize = self.values[0].len();
+        let b: usize = if a == 0 { 0 } else { self.values[0].len() };
         [a, b]
     }
     
