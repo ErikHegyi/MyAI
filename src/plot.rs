@@ -1,6 +1,12 @@
 use std::path::Path;
 use plotly::{Plot, Scatter};
-use crate::linear_regression::LinearRegression;
+
+
+pub trait Plotable {
+    fn predicted(&self) -> Vec<f64>;
+    fn actual(&self) -> Vec<f64>;
+    fn indices(&self) -> Vec<usize>;
+}
 
 
 /// Plot the actual values and the predicted values onto a graph.  
@@ -8,37 +14,17 @@ use crate::linear_regression::LinearRegression;
 /// ## Parameters
 /// `model: LinearRegression` - The model, which will predict the values.  
 /// `path: impl AsRef<Path>` - The path, to which the `HTML` page should be exported.
-pub fn plot(model: LinearRegression, path: impl AsRef<Path>) {
+pub fn plot(model: impl Plotable, path: impl AsRef<Path>) {
     let mut plot = Plot::new();
     
     // Actual values
-    let x: Vec<usize> = model.x
-        .rows()
-        .iter()
-        .enumerate()
-        .map(|(i, _)| i)
-        .collect();
-    let y: Vec<f64> = model.y
-        .values()
-        .iter()
-        .map(|x| x.value())
-        .collect();
+    let x: Vec<usize> = model.indices();
+    let y: Vec<f64> = model.actual();
     plot.add_trace(Scatter::new(x, y).name("Actual"));
     
     // Predicted values
-    let x: Vec<usize> = model.x
-        .rows()
-        .iter()
-        .enumerate()
-        .map(|(i, _)| i)
-        .collect();
-    let y: Vec<f64> = model.x
-        .rows()
-        .iter()
-        .enumerate()
-        .map(|(_, x) | model.predict(x.clone()))
-        .map(|x| x.value())
-        .collect();
+    let x: Vec<usize> = model.indices();
+    let y: Vec<f64> = model.predicted();
     plot.add_trace(Scatter::new(x, y).name("Predicted"));
     
     // Export the graph

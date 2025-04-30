@@ -2,6 +2,7 @@ use crate::{scalar, vector};
 use std::path::Path;
 use std::io::Result;
 use crate::matrix::Matrix;
+use crate::plot::Plotable;
 use crate::read_csv::read_csv;
 use crate::scalar::Scalar;
 use crate::vector::Vector;
@@ -226,5 +227,18 @@ impl LinearRegression {
         };
         
         Self::cost(predicted, actual)
+    }
+}
+
+
+impl Plotable for LinearRegression {
+    fn predicted(&self) -> Vec<f64> {
+        self.x.rows().iter().map(|x| self.predict(x.clone())).map(|x| x.value()).collect()
+    }
+    fn actual(&self) -> Vec<f64> {
+        self.y.values().into_iter().map(|x| x.value()).collect()
+    }
+    fn indices(&self) -> Vec<usize> {
+        self.x.rows().iter().enumerate().map(|(i, _)| i).collect()
     }
 }
