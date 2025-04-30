@@ -1,6 +1,6 @@
 use std::path::Path;
 use plotly::{Plot, Scatter};
-use crate::single_feature_linear_regression::SingleFeatureLinearRegression;
+use crate::linear_regression::LinearRegression;
 
 
 /// Plot the actual values and the predicted values onto a graph.  
@@ -8,34 +8,38 @@ use crate::single_feature_linear_regression::SingleFeatureLinearRegression;
 /// ## Parameters
 /// `model: LinearRegression` - The model, which will predict the values.  
 /// `path: impl AsRef<Path>` - The path, to which the `HTML` page should be exported.
-pub fn plot(model: SingleFeatureLinearRegression, path: impl AsRef<Path>) {
+pub fn plot(model: LinearRegression, path: impl AsRef<Path>) {
     let mut plot = Plot::new();
     
     // Actual values
-    let y: Vec<f64> = model.data
+    let x: Vec<usize> = model.x
+        .rows()
+        .iter()
+        .enumerate()
+        .map(|(i, _)| i)
+        .collect();
+    let y: Vec<f64> = model.y
         .values()
-        .clone()
         .iter()
         .map(|x| x.value())
         .collect();
-    let x: Vec<f64> = model.values
-        .values()
-        .clone()
-        .iter()
-        .map(|x| x.value())
-        .collect();
-    let trace = Scatter::new(x, y.clone()).name("Actual");
-    plot.add_trace(trace);
+    plot.add_trace(Scatter::new(x, y).name("Actual"));
     
     // Predicted values
-    let x: Vec<f64> = model
-        .data
-        .clone()
-        .into_iter()
-        .map(|x| model.predict(x).value())
-        .collect::<Vec<f64>>();
-    let trace = Scatter::new(x, y).name("Predicted");
-    plot.add_trace(trace);
+    let x: Vec<usize> = model.x
+        .rows()
+        .iter()
+        .enumerate()
+        .map(|(i, _)| i)
+        .collect();
+    let y: Vec<f64> = model.x
+        .rows()
+        .iter()
+        .enumerate()
+        .map(|(_, x) | model.predict(x.clone()))
+        .map(|x| x.value())
+        .collect();
+    plot.add_trace(Scatter::new(x, y).name("Predicted"));
     
     // Export the graph
     plot.write_html(path);
