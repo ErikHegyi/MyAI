@@ -171,7 +171,7 @@ impl Mul<Matrix> for Matrix {
 impl Default for Matrix {
     fn default() -> Self {
         Matrix {
-            values: vec![vector!()]
+            values: vec![]
         }
     }
 }

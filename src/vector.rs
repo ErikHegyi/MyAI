@@ -115,8 +115,8 @@ impl Add<Vector> for Vector {
 
 impl AddAssign<Vector> for Vector {
     fn add_assign(&mut self, rhs: Vector) {
-        for value in rhs.values {
-            self.values.push(value)
+        for i in 0..rhs.values.len() {
+            self.values[i] += rhs.values[i]
         }
     }
 }
