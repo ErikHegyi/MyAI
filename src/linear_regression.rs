@@ -8,38 +8,6 @@ use crate::vector::Vector;
 
 
 #[macro_export]
-macro_rules! summa {
-    ($($x: literal), +) => {
-        {
-            let mut result: Scalar = scalar!(0);
-            $(
-                result += Scalar::from($x);
-            )+
-            result
-        }
-    };
-    ($x: ident) => {
-        {
-            let mut result: Scalar = scalar!(0);
-            for item in $x {
-                result += item;
-            }
-            result
-        }
-    };
-    ($x: expr) => {
-        {
-            let mut result: Scalar = scalar!(0);
-            for item in $x {
-                result += item;
-            }
-            result
-        }
-    }
-}
-
-
-#[macro_export]
 macro_rules! zeros {
     ($x: literal) => {
         {
