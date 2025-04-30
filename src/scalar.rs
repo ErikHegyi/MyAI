@@ -1,7 +1,18 @@
 use std::f64;
 use std::fmt::{Debug, Display, Formatter};
+use std::num::{ParseFloatError, ParseIntError};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
+use thiserror::Error;
+use std::str::FromStr;
 
+
+#[derive(Error, Debug)]
+pub enum ScalarError {
+    #[error("Could not parse float into scalar")]
+    ParseFloatError(#[from] ParseFloatError),
+    #[error("Could not parse integer into scalar")]
+    ParseIntError(#[from] ParseIntError)
+}
 
 #[derive(Clone, Copy, PartialOrd, PartialEq)]
 pub struct Scalar {
@@ -16,14 +27,14 @@ impl Scalar {
     pub fn value(&self) -> f64 {
         self.value
     }
-    
+
     /// Set the value of the scalar.
     /// ## Parameters
     /// `value: f64` - The new value of the scalar.
     pub fn set_value(&mut self, value: f64) {
         self.value = value;
     }
-    
+
     /// Raise the scalar to the given power.
     /// ## Parameters
     /// `n: i32` - The exponent of the power.
@@ -32,7 +43,7 @@ impl Scalar {
     pub fn pow(&self, n: i32) -> Self {
         Self::from(self.value.powi(n))
     }
-    
+
     /// Get the absolute value of the scalar.
     /// ## Returns
     /// `Self` - The absolute value of the scalar.
@@ -136,6 +147,22 @@ impl Neg for Scalar {
     fn neg(self) -> Self::Output {
         Self {
             value: -self.value
+        }
+    }
+}
+
+impl FromStr for Scalar {
+    type Err = ScalarError;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.contains('.') {
+            true => match s.parse::<f64>() {
+                Ok(x) => Ok(Scalar::from(x)),
+                Err(e) => Err(ScalarError::ParseFloatError(e))
+            },
+            false => match s.parse::<i32>() {
+                Ok(x) => Ok(Scalar::from(x)),
+                Err(e) => Err(ScalarError::ParseIntError(e))
+            }
         }
     }
 }
