@@ -6,7 +6,7 @@ use crate::scalar::Scalar;
 
 #[derive(Debug, Clone, PartialOrd, PartialEq)]
 pub struct Vector {
-    values: Vec<Scalar>
+    pub values: Vec<Scalar>
 }
 
 
