@@ -40,6 +40,18 @@ fn train_model(iterations: u32, learning_rate: f64) {
 ```
 
 ## Polynomial Regression
+Like linear regression, polynomial regression is a regression algorithm with a cost function and gradient descent.
+The base formula for the linear function is: $y = ax + b$\
+The base formula for the polynomial function is: $$y = b + \sum_{i=0}^n a_i x^{n-i}$$ or $$y = a_0x^n + a_1x^{n-1} + a_2x^{n-2} ... + a_{n - 1}x + n$$\
+Where:\
+$a$ is the vector of weights.\
+$b$ is the bias.\
+This allows for better accuracy if the data does not fit a linear function, but can still be described with a single line.
+
+### The cost function
+The cost function of a polynomial regression is the same function
+$$C = \frac{1}{n} \sum_{i=0}^n L_i^2 = \frac{1}{n} \sum_{i=0}^n (\hat{Y_i} - Y_i)^2$$\
+Except that now, the prediction will not be $a_ix_i + b$.
 ### Ridge
 ### Lasso
 ### Elastic Net
