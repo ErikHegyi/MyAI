@@ -18,7 +18,8 @@ pub fn read_csv<P: AsRef<Path>>(file: P, separator: char) -> Result<Vec<Vec<Stri
     // Read in the file
     let file: String = read_to_string(file)?;
     let lines: Vec<&str> = file
-        .split("\r\n")
+        .split("\n")
+        .map(|x| x.trim_end())
         .collect::<Vec<&str>>();
     
     // Interpret each line
