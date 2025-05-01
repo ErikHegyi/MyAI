@@ -51,7 +51,11 @@ This allows for better accuracy if the data does not fit a linear function, but 
 ### The cost function
 The cost function of a polynomial regression is the same function
 $$C = \frac{1}{n} \sum_{i=0}^n L_i^2 = \frac{1}{n} \sum_{i=0}^n (\hat{Y_i} - Y_i)^2$$\
-Except that now, the prediction will not be $a_ix_i + b$.
+Except that now, the prediction will not be $a_ix_i + b$, but $b + \sum_{i=0}^n a_i x^{n - i}$\
+where
+$a_i$ is the weight (vector) for the current power,\
+$x$ is the given feature vector\
+$b$ is the bias.
 ### Ridge
 ### Lasso
 ### Elastic Net
