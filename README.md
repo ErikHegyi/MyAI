@@ -24,7 +24,7 @@ $n$ is the amount of data we have,
 $L_i = \hat{Y}_i-Y_i$ is the loss for the current piece of data, where $\hat{Y}$ is the vector of predicted values, and $Y$ is the vector of actual values,  
 $a$ is the weight,  
 $b$ is the bias,  
-$x_i$ is the value that should be predicted.
+$x_i$ is the feature, that we are basing our prediction on.
 
 The program constantly updates the parameters, until it finds the optimal values.
 This is done by graphing the cost function, and looking for the lowest slope - this is called **gradient descent**.  
@@ -42,7 +42,7 @@ fn train_model(iterations: u32, learning_rate: f64) {
 ## Polynomial Regression
 Like linear regression, polynomial regression is a regression algorithm with a cost function and gradient descent.
 The base formula for the linear function is: $y = ax + b$\
-The base formula for the polynomial function is: $$y = b + \sum_{i=0}^n a_i x^{n-i}$$ or $$y = a_0x^n + a_1x^{n-1} + a_2x^{n-2} ... + a_{n - 1}x + n$$\
+The base formula for the polynomial function is: $$y = b + \sum_{i=0}^n a_i x^{n-i}$$ or $$y = a_0x^n + a_1x^{n-1} + a_2x^{n-2} ... + a_{n - 1}x + b$$\
 Where:\
 $a$ is the vector of weights.\
 $b$ is the bias.\
@@ -61,6 +61,9 @@ $b$ is the bias.
 ### Elastic Net
 ## Logistic Regression
 ### Sigmoid
+The sigmoid function maps all of our values between $0.0$ and $1.0$.
+$$\sigma (x) = \frac{1}{1 + e^{-x}}$$
+Where $e$ is Euler's number ($e \approx 2.718$).
 ## Multinomial Logistic Regression
 ### Softmax
 ## Naive Bayes
@@ -76,6 +79,20 @@ $b$ is the bias.
 ### Sigmoid Kernel
 ## Support Vector Regression
 ## K-Nearest Neighbors
+K-Nearest Neighbors (**KNN**) maps the given data points on a 2-dimensional plane.  
+After this, when receiving a new data point, it checks which existing data points are closer, and classifies it.  
+Example:
+> We mapped two bananas, and two apples. We give it another fruit. If it is closer to the apples, it classifies the new fruit as an apple, otherwise as a banana.
+
+The formula for calculating the distance between two points is either the:
+- **Euclidean distance** - $\sqrt{\sum_{i=1}^{d}(a_i - b_i)^2}$, where $d$ is the number of dimensions (for our two-dimensional plane $d = 2$ - x and y), and $a$ and $b$ our are points.
+- **Manhattan distance** - $\sqrt{\sum_{i=1}^{d}|x_i - y_i|}$
+- **Minkowski Distance** - $(\sum_{i=1}^n(x_i - y_i)^P)^{\frac{1}{P}}$
+
+My model uses the **Euclidean distance**.
+
+> The **k** in the K-Nearest neighbors stands for the **hyperparameter k**, which tells the model how many neighbors should it check.  
+> For example, if $k = 2$, then it will only check the two closest neighbors.
 ## K-Nearest Neighbors Regression
 ## Ensemble Methods
 ### Bagging
