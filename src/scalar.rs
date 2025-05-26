@@ -43,6 +43,13 @@ impl Scalar {
     pub fn pow(&self, n: i32) -> Self {
         Self::from(self.value.powi(n))
     }
+    
+    /// Get the square root of the given number.
+    /// ## Returns
+    /// `Scalar` - The square root of the scalar.
+    pub fn sqrt(&self) -> Self {
+        Self::from(self.value.sqrt())
+    }
 
     /// Get the absolute value of the scalar.
     /// ## Returns
