@@ -142,7 +142,7 @@ impl PolynomialRegression {
 
         let mut summa: Matrix = Matrix::default();
         for i in 0..n {
-            
+
             let prediction: Scalar = self.predict(self.x[i].clone());
             let actual: Scalar = self.y[i];
             let error: Scalar = Self::loss(prediction, actual);
