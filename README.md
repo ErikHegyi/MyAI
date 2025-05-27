@@ -60,6 +60,8 @@ $b$ is the bias.
 ### Lasso
 ### Elastic Net
 ## Logistic Regression
+Logistic regression is a **binary classification algorithm**, which uses the **sigmoid** function to map the output of a linear regression model into the $<0.0; 1.0>$ range.  
+The closer the value is to 0.0, the more likely it is to be *A*, and the closer it is to 1.0, the more likely it is to *B*.
 ### Sigmoid
 The sigmoid function maps all of our values between $0.0$ and $1.0$.
 $$\sigma (x) = \frac{1}{1 + e^{-x}}$$
